@@ -29,7 +29,6 @@ public class ContactService {
 	
 	private final ContactRepository contactRepository;
 	private final ModelMapper modelMapper;
-	private final CsvMapper csvMapper;
 	
 	@Transactional
 	public void uploadContacts(MultipartFile file) throws IOException {
@@ -41,6 +40,8 @@ public class ContactService {
 		if (!file.getContentType().equals("text/csv")) {
             throw new InvalidFileException("Please upload a CSV file");
         }
+		
+		CsvMapper csvMapper = new CsvMapper();
 		
 		MappingIterator<ContactDTO> contactsIterator = csvMapper
                 .readerFor(ContactDTO.class)
@@ -80,6 +81,8 @@ public class ContactService {
 		List<ContactDTO> contactList = contactRepository.findAll(pageRequest).stream()
 														.map(field -> modelMapper.map(field, ContactDTO.class))
 														.collect(Collectors.toList());
+		
+		CsvMapper csvMapper = new CsvMapper();
 		
 		// Generate schema from the Employee class
         CsvSchema schema = csvMapper.schemaFor(ContactDTO.class).withHeader();												

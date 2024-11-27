@@ -32,19 +32,21 @@ public class ContactController {
 	        value = "/upload",
 	        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
 	    )
-	public ResponseEntity<?> uploadCSV(@RequestParam("file") MultipartFile file){
+	public ResponseEntity<?> uploadCSV(@RequestParam MultipartFile file){
 		try {
+			long startTime = System.currentTimeMillis();
             contactService.uploadContacts(file);
-            return ResponseEntity.ok(new ApiResponse(true, "Contacts uploaded successfully"));
+            long endTime = System.currentTimeMillis();
+            return ResponseEntity.ok(new ApiResponse(true, "Contacts uploaded successfully", (endTime-startTime)/1000));
         } catch (InvalidFileException e) {  // Now this will catch our custom exceptions
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, "File validation failed: " + e.getMessage()));
+                .body(new ApiResponse(false, "File validation failed: " + e.getMessage(),0l));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse(false, "Error processing file: " + e.getMessage()));
+                .body(new ApiResponse(false, "Error processing file: " + e.getMessage(),0l));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse(false, "Unexpected error: " + e.getMessage()));
+                .body(new ApiResponse(false, "Unexpected error: " + e.getMessage(),0l));
         }
 	}
 	
@@ -64,7 +66,7 @@ public class ContactController {
 		            .body(csvContent.getBytes(StandardCharsets.UTF_8));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(new ApiResponse(false, "Unexpected error: " + e.getMessage()));
+	                .body(new ApiResponse(false, "Unexpected error: " + e.getMessage(),0l));
 		}
 	}
 }

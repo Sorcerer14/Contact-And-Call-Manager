@@ -10,14 +10,14 @@ import io.swagger.v3.oas.models.info.Info;
 
 @Configuration
 public class MiscConfig {
-	
-	@Bean
-    public ModelMapper modelMapper() {
+
+    @Bean
+    ModelMapper modelMapper() {
         return new ModelMapper();
     }
-	
-	@Bean
-    public OpenAPI springShopOpenAPI() {
+
+    @Bean
+    OpenAPI springShopOpenAPI() {
         return new OpenAPI()
 			                .info(new Info().title("Contact Management API")
 			                        		.description("Spring Boot application for managing contacts"));
